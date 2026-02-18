@@ -5,6 +5,13 @@ from .app import app_obj
 from .title_bar import Title_bar
 from utils import api_request
 from .left_area import LeftArea
+from .search import Search
+
+
+
+
+
+
 class MainWindow(widgets.QMainWindow):
     def __init__(self, window_width: int, window_height: int):
         widgets.QMainWindow.__init__(self)
@@ -50,21 +57,29 @@ QWidget {
 
 # CONTENT_FRAME — все окно без titlebar
         self.CONTENT_FRAME = widgets.QFrame(self.CENTRAL_WIDGET)
-        content_frame_height = self.WINDOW_HEIGHT - 40 
+        content_frame_height = self.WINDOW_HEIGHT - self.TITLE_BAR.height()
         self.CONTENT_FRAME.setFixedSize(core.QSize(self.WINDOW_WIDTH, content_frame_height))
         self.CONTENT_FRAME_LAYOUT = widgets.QHBoxLayout()
         self.CONTENT_FRAME_LAYOUT.setContentsMargins(0, 0, 0, 0)
         self.CONTENT_FRAME_LAYOUT.setSpacing(0)
         self.CONTENT_FRAME.setLayout(self.CONTENT_FRAME_LAYOUT)
 
+
+# #api request
+#         self.search_obj = Search(parent = None )
+        
+#         # api_request(city_name = self.search_obj.city)
+        
 # LeftArea внутри CONTENT_FRAME 
         left_area_width = self.WINDOW_WIDTH // 3
         left_area_height = self.WINDOW_HEIGHT
         self.LEFTAREA = LeftArea(self.CONTENT_FRAME, window_width=left_area_width, window_height=left_area_height)
 
 # Добавляем карточку
-        card_width1 = left_area_width // 1.1
-        self.LEFTAREA.add_card(card_width=card_width1)
+#         card_width1 = left_area_width // 1.1
+#         self.search_obj.city_entered.connect(lambda city: (api_request(city), self.LEFTAREA.add_card(card_width=self.LEFTAREA.width())))
+#         # if self.search_obj.city:
+#         #         self.LEFTAREA.add_card(card_width=card_width1)
 
 # Добавляем LEFTAREA в CONTENT_FRAME
         self.CONTENT_FRAME_LAYOUT.addWidget(self.LEFTAREA, alignment=core.Qt.AlignmentFlag.AlignLeft)
@@ -89,6 +104,29 @@ QFrame {
 # Добавляем CONTENT_FRAME в центральный виджет
         self.CENTRAL_WIDGET_LAYOUT.addWidget(self.CONTENT_FRAME)
         
+        
+
+        
+        
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         # self.FRAME = widgets.QFrame(parent = self.CONTENT_FRAME)
         # self.FRAME.setStyleSheet("background-color: red; ")
         # self.FRAME.setFixedSize(788, 197)
