@@ -30,7 +30,9 @@ class MainWindow(widgets.QMainWindow):
         self.CENTER_X = (self.SCREEN_WIDTH // 2) - (self.WINDOW_WIDTH // 2)
         self.CENTER_Y = (self.SCREEN_HEIGHT // 2) - (self.WINDOW_HEIGHT // 2)
         
-        self.setGeometry(self.CENTER_X, self.CENTER_Y, self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
+        # self.setGeometry(self.CENTER_X, self.CENTER_Y, self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
+        self.resize(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
+        self.move(self.CENTER_X, self.CENTER_Y)
         
         # Делает фон всего окна прозрачным, чтобы закругление было видно
         self.setAttribute(core.Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -54,35 +56,32 @@ QWidget {
 # TITLE_BAR добавляем в центральный виджет
         self.TITLE_BAR = Title_bar(self.CENTRAL_WIDGET, width=self.WINDOW_WIDTH)
         self.CENTRAL_WIDGET_LAYOUT.addWidget(self.TITLE_BAR)
-
+# self.WINDOW_WIDTH, content_frame_height)
 # CONTENT_FRAME — все окно без titlebar
         self.CONTENT_FRAME = widgets.QFrame(self.CENTRAL_WIDGET)
         content_frame_height = self.WINDOW_HEIGHT - self.TITLE_BAR.height()
-        self.CONTENT_FRAME.setFixedSize(core.QSize(self.WINDOW_WIDTH, content_frame_height))
+        self.CONTENT_FRAME.setSizePolicy(widgets.QSizePolicy.Policy.Expanding, widgets.QSizePolicy.Policy.Expanding)
         self.CONTENT_FRAME_LAYOUT = widgets.QHBoxLayout()
         self.CONTENT_FRAME_LAYOUT.setContentsMargins(0, 0, 0, 0)
         self.CONTENT_FRAME_LAYOUT.setSpacing(0)
         self.CONTENT_FRAME.setLayout(self.CONTENT_FRAME_LAYOUT)
 
 
-# #api request
-#         self.search_obj = Search(parent = None )
-        
-#         # api_request(city_name = self.search_obj.city)
-        
 # LeftArea внутри CONTENT_FRAME 
-        left_area_width = self.WINDOW_WIDTH // 3
-        left_area_height = self.WINDOW_HEIGHT
-        self.LEFTAREA = LeftArea(self.CONTENT_FRAME, window_width=left_area_width, window_height=left_area_height)
-
-# Добавляем карточку
-#         card_width1 = left_area_width // 1.1
-#         self.search_obj.city_entered.connect(lambda city: (api_request(city), self.LEFTAREA.add_card(card_width=self.LEFTAREA.width())))
-#         # if self.search_obj.city:
-#         #         self.LEFTAREA.add_card(card_width=card_width1)
+        self.LEFTAREA = LeftArea(self.CONTENT_FRAME, 
+                                main_window=self
+                                )
+        
+#Right Area
+        self.RIGHTAREA = widgets.QFrame(self.CONTENT_FRAME)
+        self.RIGHTAREA.setSizePolicy(
+    widgets.QSizePolicy.Policy.Expanding,
+    widgets.QSizePolicy.Policy.Expanding
+)
 
 # Добавляем LEFTAREA в CONTENT_FRAME
-        self.CONTENT_FRAME_LAYOUT.addWidget(self.LEFTAREA, alignment=core.Qt.AlignmentFlag.AlignLeft)
+        self.CONTENT_FRAME_LAYOUT.addWidget(self.LEFTAREA, 1 )
+        self.CONTENT_FRAME_LAYOUT.addWidget(self.RIGHTAREA, 3)
         self.CONTENT_FRAME_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignLeft)
 
 # Фон CONTENT_FRAME — градиент, углы 
