@@ -3,7 +3,7 @@ from modules.window import MainWindow
 
 def main():
     # try:
-        main_window = MainWindow (1200, 800)
+        main_window = MainWindow (1920, 1080)
         main_window.show()
         app_obj.exec()
     # except Exception as error:

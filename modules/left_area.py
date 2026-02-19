@@ -1,13 +1,15 @@
 from PyQt6 import QtWidgets as widgets
 from PyQt6 import QtCore as core 
 from PyQt6 import QtGui as gui
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
 from .card import Card
 from .search import Search
 from static import json
 import json
-from datetime import datetime, timezone, timedelta
+import datetime
 from utils import api_request
+from PyQt6.QtGui import QPixmap
 
 class LeftArea(widgets.QFrame):
     def __init__(self, parent: None, main_window ):
@@ -76,33 +78,35 @@ class LeftArea(widgets.QFrame):
 
         self.scroll_area.setWidget(self.scroll_frame)
         layout.addWidget(self.scroll_area)
-
+        
+        #флаг для карточки где мы
+        self.active_card = None 
+        self.active_image = None 
     # cards with forecast
     def add_card(self, city=None):
         if city is None:
             city = self.search_obj.city 
-
         with open(f"static/json/{self.search_obj.city}.json", mode ="r") as file:
-            data = json.load(file)
-            if "list" not in data :
+            self.DATA = json.load(file)
+            if "list" not in self.DATA :
                 self.search_obj.city = ''
                 self.search_obj.clear()
                 return
             else:
                 card = Card(self.scroll_frame, 
                             city_name = self.search_obj.city, 
-                            temp = data["list"][0]["main"]["temp"], 
-                            time = datetime.now(timezone(timedelta(seconds=data["city"]["timezone"]))),
-                            weather = data["list"][0]["weather"][0]["description"], 
-                            min_temp=data["list"][0]["main"]["temp_min"],
-                            max_temp=data["list"][0]["main"]["temp_max"])
+                            temp = round(self.DATA["list"][0]["main"]["temp"]), 
+                            time = datetime.datetime.now(datetime.timezone(datetime.timedelta(seconds=self.DATA["city"]["timezone"]))).strftime("%H:%M"),
+                            weather = self.DATA["list"][0]["weather"][0]["description"], 
+                            min_temp=round(self.DATA["list"][0]["main"]["temp_min"]),
+                            max_temp=round(self.DATA["list"][0]["main"]["temp_max"]))
+                card.clicked.connect(self.add_image)
                 self.scroll_layout.addWidget(card)
                 card.setFixedHeight(100)
                 card.setSizePolicy(
             widgets.QSizePolicy.Policy.Expanding,
             widgets.QSizePolicy.Policy.Fixed
         )
-                # card.setSizePolicy(widgets.QSizePolicy.Policy.Expanding, widgets.QSizePolicy.Policy.Expanding)
                 card.setStyleSheet("""
         QFrame {
             background-color: transparent;
@@ -170,6 +174,21 @@ QFrame {
         from utils import api_request 
         api_request(city)  # создаёт JSON
         self.add_card(city=city) #activate add card
+
+
+    def add_image(self,card):
+        if self.active_image is None :
+            self.active_image = widgets.QLabel()
+            pix_map = QPixmap('media/Vector.png')
+            self.active_image.setPixmap(pix_map)
+            
+        
+        if self.active_card is not None:
+            card.LAYOUT_CARD.removeWidget(self.active_image)
+        
+        card.LAYOUT_CARD.addWidget(self.active_image, 1, 0, alignment = core.Qt.AlignmentFlag.AlignLeft)
+        self.active_card = card
+
 
 
 
