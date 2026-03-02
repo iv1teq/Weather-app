@@ -114,7 +114,7 @@ class MainWindow(widgets.QMainWindow):
 
         # Добавляем LEFTAREA в CONTENT_FRAME
                 self.CONTENT_FRAME_LAYOUT.addWidget(self.LEFTAREA, 1 )
-                self.CONTENT_FRAME_LAYOUT.addWidget(self.RIGHTAREA, 3)
+                self.CONTENT_FRAME_LAYOUT.addWidget(self.RIGHTAREA, 2)
                 self.CONTENT_FRAME_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignLeft)
 
         # Фон CONTENT_FRAME — градиент, углы 
@@ -147,7 +147,7 @@ class MainWindow(widgets.QMainWindow):
                 with open(f"static/json/{self.SEARCH.city}.json", mode ="r") as file:
                         data = json.load(file)
                 left_area.update_data(data)
-                card.update_data(data)
+                card.update_data(data, main_window = self)
                 right_area.update_data(data)
                 
         

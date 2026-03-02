@@ -48,7 +48,7 @@ class RightArea(widgets.QFrame):
                 self.left_frame = widgets.QFrame(self)
                 self.LAYOUT.addWidget(self.left_frame, 1, 0)
                 self.left_frame.setMinimumHeight(int(main_window.width() / 5))
-                self.left_frame.setMinimumWidth(int(main_window.width() / 3))    
+                self.left_frame.setMinimumWidth(int(main_window.width() / 5))    
                 self.left_frame.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding )
                 
                 self.left_frame.setStyleSheet('background-color: rgba(0, 0, 0, 50); border-radius: 10px ;  ')
@@ -203,6 +203,7 @@ class RightArea(widgets.QFrame):
                 self.bottom1 = widgets.QFrame()
                 self.botom1_layot = widgets.QVBoxLayout()
                 self.bottom1.setLayout(self.botom1_layot)
+                self.bottom1.setMinimumHeight(200)
                 self.bottom1.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding )
                 self.bottom1.setStyleSheet('background-color: rgba(0,0,0,50); border-radius: 10px')
                 self.LAYOUT.addWidget(self.bottom1, 2, 0, 1, 0)

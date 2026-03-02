@@ -43,14 +43,14 @@ class Card (widgets.QFrame):
             self.timer.timeout.connect(self.update_time)
         self.timer.start(1000)
 
-        self.CITY_NAME.setStyleSheet( "font-size: 30px; font-weight: bold; font: Roboto;" )
-        self.TEMP.setStyleSheet( "font-size: 44px; font-weight: bold; font: Roboto" )
-        self.TIME.setStyleSheet( "font-size: 12px; font-weight: bold; font: Roboto" )
-        self.WEATHER.setStyleSheet( "font-size: 12px; font-weight: bold; font: Roboto" )
-        self.MINMAX_TEMP.setStyleSheet( "font-size: 12px; font-weight: bold; font: Roboto" )
+        self.CITY_NAME.setStyleSheet( "font-size: 40px; font-weight: bold; font: Roboto;" )
+        self.TEMP.setStyleSheet( "font-size: 60px; font-weight: bold; font: Roboto" )
+        self.TIME.setStyleSheet( "font-size: 20px; font-weight: bold; font: Roboto" )
+        self.WEATHER.setStyleSheet( "font-size: 20px; font-weight: bold; font: Roboto" )
+        self.MINMAX_TEMP.setStyleSheet( "font-size: 20px; font-weight: bold; font: Roboto" )
 
         self.underline = widgets.QFrame()
-        self.underline.setFixedSize(int(main_window.width() / 5 - 5), 5)  # размер контейнера
+        self.underline.setFixedSize(int((main_window.width() / 3)- (main_window.width() / 250 )), 5)  # размер контейнера
         self.underline.setStyleSheet("background: none; padding-bottom: 5px; border-bottom: 2px solid rgba(255, 255, 255, 50);")
 
 
@@ -76,8 +76,9 @@ class Card (widgets.QFrame):
         if event.button() == Qt.MouseButton.LeftButton:
             self.clicked.emit(self)
         
-    def update_data(self, data):
+    def update_data(self, data, main_window):
         self.data = data
+        self.underline.setFixedSize(int(main_window.width() / 3 - 80), 5)
 
 
 

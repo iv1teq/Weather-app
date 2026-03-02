@@ -34,6 +34,8 @@ class Hour_forecast(widgets.QFrame):
         self.SCROLL_AREA.setWidget(self.SCROLL_FRAME)
         self.LAYOUT.addWidget(self.SCROLL_AREA)
             
+
+        self.setStyleSheet('background-color: None')
     def update_data(self, data):
         if not data or "list" not in data:
             return

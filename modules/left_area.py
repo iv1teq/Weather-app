@@ -28,7 +28,7 @@ class LeftArea(widgets.QFrame):
 
 
         self.setSizePolicy(widgets.QSizePolicy.Policy.Preferred, widgets.QSizePolicy.Policy.Expanding)
-        self.setStyleSheet("background-color: rgba(0, 0, 0, 50), border-radius: 0px;")
+        self.setStyleSheet("background-color: rgba(0, 0, 0, 100); border-radius: 0px;")
 
         #vertikal layout
         layout = widgets.QVBoxLayout(self)
@@ -44,11 +44,10 @@ class LeftArea(widgets.QFrame):
         #search object
 
         top_layout.addWidget(self.search)
-        # self.search.city_entered.connect(self.handle_city)
         
 
         #theme button
-        self.button = widgets.QPushButton(parent= self)
+        self.button = widgets.QPushButton(parent = self)
         self.button.setIcon(QIcon("media/dark.png"))
         self.button.setIconSize(core.QSize(50, 50))  # базовый размер иконки
         self.button.setMinimumSize(50, 50)   
@@ -69,7 +68,7 @@ class LeftArea(widgets.QFrame):
         #scroll
         self.scroll_area = widgets.QScrollArea(self)
         self.scroll_area.setWidgetResizable(True)
-        self.scroll_area.setStyleSheet("border: none;")
+        self.scroll_area.setStyleSheet("border-radius: 0px;")
         self.scroll_area.setStyleSheet("""
     background-color: transparent;  
     border: none;                   
@@ -110,7 +109,7 @@ class LeftArea(widgets.QFrame):
                         main_window = self.main_window, 
                         search = self.search)
             self.scroll_layout.insertWidget(0, card)
-            card.setFixedHeight(100)
+            card.setMinimumHeight(150)
             card.setSizePolicy(
         widgets.QSizePolicy.Policy.Expanding,
         widgets.QSizePolicy.Policy.Fixed
@@ -155,7 +154,6 @@ QFrame {
     border-top-right-radius: 0px;
 }
 """)
-
 
             self.BUTTON_PRESSED = True
 
