@@ -47,7 +47,7 @@ class RightArea(widgets.QFrame):
 
                 self.left_frame = widgets.QFrame(self)
                 self.LAYOUT.addWidget(self.left_frame, 1, 0)
-                self.left_frame.setMinimumHeight(300)
+                self.left_frame.setMinimumHeight(int(main_window.width() / 5))
                 self.left_frame.setMinimumWidth(int(main_window.width() / 3))    
                 self.left_frame.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding )
                 

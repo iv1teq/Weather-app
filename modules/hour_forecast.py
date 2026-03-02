@@ -11,19 +11,28 @@ class Hour_forecast(widgets.QFrame):
         self.WEATHER_LABEL = widgets.QLabel(self, text = "какая-то погода до конца дня")
         self.WEATHER_LABEL.setStyleSheet("font-size: 20px")
         self.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding )
-        self.LAYOUT.addWidget(self.WEATHER_LABEL)
+        self.LAYOUT.addWidget(self.WEATHER_LABEL, alignment=core.Qt.AlignmentFlag.AlignTop)
         
         self.SCROLL_AREA = widgets.QScrollArea(self)
+        self.SCROLL_AREA.setWidgetResizable(True)
+        self.SCROLL_AREA.setStyleSheet("border: none;")
+        self.SCROLL_AREA.setStyleSheet("""
+    background-color: transparent;  
+    border: none;                   
+""")
+        # self.SCROLL_AREA.setVerticalScrollBarPolicy(core.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        # self.SCROLL_AREA.setHorizontalScrollBarPolicy(core.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.SCROLL_FRAME = widgets.QFrame()
+        self.SCROLL_LAYOUT = widgets.QHBoxLayout(self.SCROLL_FRAME)
         # self.SCROLL_FRAME.minimumWidth(500)
         # self.SCROLL_FRAME.minimumHeight(200)
         self.SCROLL_FRAME.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding)
-
+        # self.SCROLL_LAYOUT.setContentsMargins(5,5,5,5)
+        # self.SCROLL_LAYOUT.setSpacing(10)
         
-        self.SCROLL_LAYOUT = widgets.QHBoxLayout(self.SCROLL_FRAME)
+        
         self.SCROLL_AREA.setWidget(self.SCROLL_FRAME)
         self.LAYOUT.addWidget(self.SCROLL_AREA)
-        
             
     def update_data(self, data):
         if not data or "list" not in data:
@@ -45,6 +54,7 @@ class Hour_forecast(widgets.QFrame):
             self.TIME_LABEL = widgets.QLabel(text = str(hour))
             self.IMAGE_LABEL = widgets.QLabel()
             weather_pixmap = QPixmap(f"media/hour_forecast_icons/{weather_list[hour]}.png")
+            print()
             self.IMAGE_LABEL.setPixmap(weather_pixmap)
             self.TEMP_LABEL = widgets.QLabel(self.SCROLL_FRAME, text = str(round(temp_list[hour])))
             self.FRAME_LAYOUT.addWidget(self.TIME_LABEL)
