@@ -47,7 +47,7 @@ class MainWindow(widgets.QMainWindow):
                                 )
                 
                 
-
+                
                 self.SCREEN = app_obj.primaryScreen()
                 self.SCREEN_SIZE = self.SCREEN.size()
                 
@@ -108,10 +108,11 @@ class MainWindow(widgets.QMainWindow):
                 
                 #connect
                 # self.SEARCH.city_entered.connect(self.entered(city = self.SEARCH.city, left_area = self.LEFTAREA))
+                
                 self.SEARCH.city_entered.connect(
-                lambda: self.entered(city=self.SEARCH.city, left_area=self.LEFTAREA, card=self.CARD, right_area=self.RIGHTAREA)
-)
-
+                lambda: self.entered(city=self.SEARCH.city, left_area = self.LEFTAREA, card = self.CARD)
+)                       
+                
         # Добавляем LEFTAREA в CONTENT_FRAME
                 self.CONTENT_FRAME_LAYOUT.addWidget(self.LEFTAREA, 1 )
                 self.CONTENT_FRAME_LAYOUT.addWidget(self.RIGHTAREA, 2)
@@ -137,19 +138,19 @@ class MainWindow(widgets.QMainWindow):
 
                 self.CENTRAL_WIDGET_LAYOUT.addWidget(self.CONTENT_FRAME)
                 
-        def entered(self, city , left_area, card, right_area):
+        def entered(self, city , left_area, card):
 
-                api_request(city) 
+                self.data = api_request(city)
+
+                left_area.update_data(self.data)
+                card.update_data(self.data, main_window=self)
+
                 
-                # создаёт JSON
-                # left_area.add_card() #activate add card
+        def card_clicked(self):
 
-                with open(f"static/json/{self.SEARCH.city}.json", mode ="r") as file:
-                        data = json.load(file)
-                left_area.update_data(data)
-                card.update_data(data, main_window = self)
-                right_area.update_data(data)
-                
+                self.RIGHTAREA.update_data(data = self.data)
+
+                        
         
         
 
@@ -167,68 +168,5 @@ class MainWindow(widgets.QMainWindow):
 
 
 
-
-
-
-
-        # self.FRAME = widgets.QFrame(parent = self.CONTENT_FRAME)
-        # self.FRAME.setStyleSheet("background-color: red; ")
-        # self.FRAME.setFixedSize(788, 197)
-        # self.CONTENT_FRAME_LAYOUT.addWidget(self.FRAME)
-
-        # self.FRAME_LAYOUT = widgets.QVBoxLayout()
-        # self.FRAME.setLayout(self.FRAME_LAYOUT)
-        
-        # self.CONTENT_FRAME_LAYOUT.addWidget(self.FRAME)
-        
-        # self.FRAME1 = widgets.QFrame(parent = self.FRAME)
-        # self.FRAME1.setStyleSheet("background-color: green; ")
-        # self.FRAME1.setFixedSize(730, 24)
-        
-        # self.FRAME1_LAYOUT = widgets.QHBoxLayout()
-        # self.FRAME1.setLayout(self.FRAME1_LAYOUT)
-        
-        # self.FRAME_LAYOUT.addWidget(self.FRAME1)
-        
-        # self.FRAME2 = widgets.QFrame(parent = self.FRAME)
-        # self.FRAME2.setStyleSheet("background-color: blue; ")
-        # self.FRAME2.setFixedWidth(730)
-        
-        # self.FRAME2_LAYOUT = widgets.QHBoxLayout()
-        # self.FRAME2_LAYOUT.setContentsMargins(0, 0, 0, 0)
-        # self.FRAME2_LAYOUT.setSpacing(10)
-        # self.FRAME2_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignLeft)
-        # self.FRAME2.setLayout(self.FRAME2_LAYOUT)
-        
-        # self.FRAME_LAYOUT.addWidget(self.FRAME2)
-        
-        # self.TEMPERATURE_GRAPH_FRAME = widgets.QFrame(parent = self.FRAME2)
-        # self.TEMPERATURE_GRAPH_FRAME.setMaximumSize(727, 136)
-        
-        # self.TEMPERATURE_GRAPH_FRAME_LAYOUT = widgets.QHBoxLayout()
-        # self.TEMPERATURE_GRAPH_FRAME_LAYOUT.setContentsMargins(0, 0, 0, 0)
-        # self.TEMPERATURE_GRAPH_FRAME_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignBottom)
-        # self.TEMPERATURE_GRAPH_FRAME.setLayout(self.TEMPERATURE_GRAPH_FRAME_LAYOUT)
-        
-        # self.FRAME2_LAYOUT.addWidget(self.TEMPERATURE_GRAPH_FRAME)
-        
-        # data_dict = api_request("Miami")
-        
-        # for hour_data in data_dict["list"]:
-        #     temperature = int(hour_data["main"]["temp"])
-            
-        #     height = 0
-            
-        #     if temperature < 0 :
-        #         height = (temperature * -2)  + 30
-        #     elif temperature == 0:
-        #         height = 30
-        #     else:
-        #         height = temperature * 2 
-            
-        #     self.COLUMN = widgets.QFrame(self.TEMPERATURE_GRAPH_FRAME)
-        #     self.COLUMN.setFixedSize(core.QSize(8, height))
-        #     self.COLUMN.setStyleSheet("background-color: gray; ")
-        #     self.TEMPERATURE_GRAPH_FRAME_LAYOUT.addWidget(self.COLUMN, alignment = core.Qt.AlignmentFlag.AlignBottom)
 
 

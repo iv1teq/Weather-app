@@ -115,6 +115,8 @@ class LeftArea(widgets.QFrame):
         widgets.QSizePolicy.Policy.Fixed
     )
             
+            
+            
             card.setStyleSheet("""
     QFrame {
         background-color: transparent;
@@ -132,6 +134,7 @@ class LeftArea(widgets.QFrame):
     }
     """)
             card.clicked.connect(self.add_image)
+            card.clicked.connect(self.main_window.card_clicked)
 
 
 

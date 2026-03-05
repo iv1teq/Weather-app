@@ -20,17 +20,11 @@ class Hour_forecast(widgets.QFrame):
     background-color: transparent;  
     border: none;                   
 """)
-        # self.SCROLL_AREA.setVerticalScrollBarPolicy(core.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        # self.SCROLL_AREA.setHorizontalScrollBarPolicy(core.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.SCROLL_FRAME = widgets.QFrame()
         self.SCROLL_LAYOUT = widgets.QHBoxLayout(self.SCROLL_FRAME)
-        # self.SCROLL_FRAME.minimumWidth(500)
-        # self.SCROLL_FRAME.minimumHeight(200)
+
         self.SCROLL_FRAME.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding)
-        # self.SCROLL_LAYOUT.setContentsMargins(5,5,5,5)
-        # self.SCROLL_LAYOUT.setSpacing(10)
-        
-        
+
         self.SCROLL_AREA.setWidget(self.SCROLL_FRAME)
         self.LAYOUT.addWidget(self.SCROLL_AREA)
             
@@ -56,11 +50,10 @@ class Hour_forecast(widgets.QFrame):
             self.TIME_LABEL = widgets.QLabel(text = str(hour))
             self.IMAGE_LABEL = widgets.QLabel()
             weather_pixmap = QPixmap(f"media/hour_forecast_icons/{weather_list[hour]}.png")
-            print()
             self.IMAGE_LABEL.setPixmap(weather_pixmap)
             self.TEMP_LABEL = widgets.QLabel(self.SCROLL_FRAME, text = str(round(temp_list[hour])))
             self.FRAME_LAYOUT.addWidget(self.TIME_LABEL)
             self.FRAME_LAYOUT.addWidget(self.IMAGE_LABEL)
             self.FRAME_LAYOUT.addWidget(self.TEMP_LABEL)
             self.SCROLL_LAYOUT.addWidget(self.FRAME)
-        
+    

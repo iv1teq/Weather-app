@@ -7,6 +7,8 @@ import datetime
 from .search import Search
 from PyQt6.QtCore import Qt
 from .hour_forecast import Hour_forecast
+from .forecast12h import Forecast12
+
 class RightArea(widgets.QFrame):
         def __init__(self, parent: None, search, card, main_window):
                 super().__init__(parent)
@@ -16,6 +18,12 @@ class RightArea(widgets.QFrame):
                 self.card = card
                 
                 self.LAYOUT = widgets.QGridLayout()
+                self.LAYOUT.setRowStretch(2, 1)
+                self.LAYOUT.setRowStretch(3, 1)
+
+                self.LAYOUT.setColumnStretch(0, 1)
+                self.LAYOUT.setColumnStretch(1, 1)
+                
                 # self.LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignTop)
                 self.LAYOUT.setContentsMargins(10,10,10,10)
                 self.LAYOUT.setSpacing(10)
@@ -206,14 +214,19 @@ class RightArea(widgets.QFrame):
                 self.bottom1.setMinimumHeight(200)
                 self.bottom1.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding )
                 self.bottom1.setStyleSheet('background-color: rgba(0,0,0,50); border-radius: 10px')
+                self.HOUR_FORECAST = Hour_forecast(parent=self.bottom1)
                 self.LAYOUT.addWidget(self.bottom1, 2, 0, 1, 0)
+                self.botom1_layot.addWidget(self.HOUR_FORECAST)
                 
                 self.bottom2 = widgets.QFrame()
-                self.bottom2.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding )
+                self.bottom2_layout = widgets.QVBoxLayout()
+                self.bottom2.setLayout(self.bottom2_layout)
                 self.bottom2.setStyleSheet('background-color: rgba(0,0,0,50); border-radius: 10px')
-                self.LAYOUT.addWidget(self.bottom2, 3, 0, 1, 0)
-                self.HOUR_FORECAST = Hour_forecast(parent=self.bottom1)
-                self.botom1_layot.addWidget(self.HOUR_FORECAST)
+                self.LAYOUT.addWidget(self.bottom2, 3, 0, 1, 2)
+                self.bottom2.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding )
+                self.FORECAST12 = Forecast12(parent = self.bottom2)
+                self.bottom2_layout.addWidget(self.FORECAST12)
+                
                 
 
                 
@@ -224,22 +237,22 @@ class RightArea(widgets.QFrame):
                 if not data or "list" not in data:
                         return
 
-                city_name = data["city"]["name"]
-                temp = round(data["list"][0]["main"]["temp"])
-                weather = data["list"][0]["weather"][0]["description"]
-                min = data["list"][0]["main"]["temp_min"]
-                max = data["list"][0]["main"]["temp_max"]
-                icon = data["list"][0]["weather"][0]["icon"]
+                self.city_name = data["city"]["name"]
+                self.temp = round(data["list"][0]["main"]["temp"])
+                self.weather = data["list"][0]["weather"][0]["description"]
+                self.min = data["list"][0]["main"]["temp_min"]
+                self.max = data["list"][0]["main"]["temp_max"]
+                self.icon = data["list"][0]["weather"][0]["icon"]
                 
 
                 # просто меняем текст виджетов
-                self.city_label.setText(city_name)
-                self.temp_label.setText(f"{temp}°")
-                self.weather_label.setText(weather)
-                self.min_max_label.setText(f"min: {round(min)}°, max: {round(max)}°")
+                self.city_label.setText(self.city_name)
+                self.temp_label.setText(f"{self.temp}°")
+                self.weather_label.setText(self.weather)
+                self.min_max_label.setText(f"min: {round(self.min)}°, max: {round(self.max)}°")
                 
                 
-                self.WEATHER_PIX = QPixmap(f'media/weather_icons/{icon}.png')  # например "01d.png"
+                self.WEATHER_PIX = QPixmap(f'media/weather_icons/{self.icon}.png')  # например "01d.png"
                 self.WEATHER_ICON.setPixmap(self.WEATHER_PIX)
 
                 # обновляем время по часовому поясу города
@@ -247,6 +260,4 @@ class RightArea(widgets.QFrame):
                 self.time_label.setText(datetime.datetime.now(tz).strftime("%H:%M"))
                 
                 self.HOUR_FORECAST.update_data(data = data )
-
-
-
+                self.FORECAST12.update_data(data = data)
