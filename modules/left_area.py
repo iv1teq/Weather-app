@@ -19,7 +19,7 @@ from PyQt6.QtCore import Qt
 class LeftArea(widgets.QFrame):
     def __init__(self, parent: None, search, card , main_window):
         super().__init__(parent)
-        # self.main_window = main_window
+        self.main_window = main_window
         self.search = search
         self.CardClass = card
         self.main_window = main_window
@@ -28,6 +28,7 @@ class LeftArea(widgets.QFrame):
 
 
         self.setSizePolicy(widgets.QSizePolicy.Policy.Preferred, widgets.QSizePolicy.Policy.Expanding)
+        self.setMaximumWidth(int(main_window.width()/3))
         self.setStyleSheet("background-color: rgba(0, 0, 0, 100); border-radius: 0px;")
 
         #vertikal layout
@@ -43,7 +44,7 @@ class LeftArea(widgets.QFrame):
 
         #search object
 
-        top_layout.addWidget(self.search)
+        # top_layout.addWidget(self.search)
         
 
         #theme button
@@ -108,6 +109,7 @@ class LeftArea(widgets.QFrame):
                         max_temp=round(self.data["list"][0]["main"]["temp_max"]),
                         main_window = self.main_window, 
                         search = self.search)
+            card.data = self.data
             self.scroll_layout.insertWidget(0, card)
             card.setMinimumHeight(150)
             card.setSizePolicy(
@@ -206,3 +208,4 @@ QFrame {
     def update_data(self, data):
         self.data = data
         self.add_card()
+

@@ -105,7 +105,11 @@ class MainWindow(widgets.QMainWindow):
                                         card = Card, 
                                         main_window = self
                                         )
-                
+                self.LEFTAREA.setMinimumWidth(self.WINDOW_WIDTH // 3)
+                self.LEFTAREA.setSizePolicy(
+    widgets.QSizePolicy.Policy.Fixed,      # ← Fixed по горизонтали
+    widgets.QSizePolicy.Policy.Expanding
+)
                 #connect
                 # self.SEARCH.city_entered.connect(self.entered(city = self.SEARCH.city, left_area = self.LEFTAREA))
                 
@@ -146,9 +150,19 @@ class MainWindow(widgets.QMainWindow):
                 card.update_data(self.data, main_window=self)
 
                 
-        def card_clicked(self):
+        def card_clicked(self, card):
+                self.data = card.data
+                self.CONTENT_FRAME_LAYOUT.removeWidget(self.RIGHTAREA)
+                self.RIGHTAREA.deleteLater()
+                self.RIGHTAREA = RightArea(self.CONTENT_FRAME, search = self.SEARCH, card = card, main_window=self)
+                self.RIGHTAREA.setSizePolicy(
+        widgets.QSizePolicy.Policy.Expanding,
+        widgets.QSizePolicy.Policy.Expanding
+        )
 
+                self.CONTENT_FRAME_LAYOUT.addWidget(self.RIGHTAREA, 2)
                 self.RIGHTAREA.update_data(data = self.data)
+
 
                         
         

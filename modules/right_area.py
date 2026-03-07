@@ -41,7 +41,7 @@ class RightArea(widgets.QFrame):
                 self.DAY_LAYOUT = widgets.QHBoxLayout()
                 self.CLOCK_LAYOUT = widgets.QGridLayout()
                 
-                self.MINMAX_LAYOUT.setSpacing(0)
+                # self.MINMAX_LAYOUT.setSpacing(0)
                 
                 
                 
@@ -261,3 +261,4 @@ class RightArea(widgets.QFrame):
                 
                 self.HOUR_FORECAST.update_data(data = data )
                 self.FORECAST12.update_data(data = data)
+        

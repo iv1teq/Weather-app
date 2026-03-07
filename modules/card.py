@@ -75,6 +75,8 @@ class Card (widgets.QFrame):
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             self.clicked.emit(self)
+
+
         
     def update_data(self, data, main_window):
         self.data = data

@@ -30,6 +30,7 @@ class Hour_forecast(widgets.QFrame):
             
 
         self.setStyleSheet('background-color: None')
+        
     def update_data(self, data):
         if not data or "list" not in data:
             return
@@ -39,7 +40,7 @@ class Hour_forecast(widgets.QFrame):
         for i in range(0, 9):
             for _ in range(3):
                 temp_list.append(data["list"][i]["main"]["temp"])
-                weather_list.append(data["list"][i]["weather"][0]["main"])
+                weather_list.append(data["list"][i]["weather"][0]["icon"])
             
             
             
@@ -49,11 +50,15 @@ class Hour_forecast(widgets.QFrame):
             self.FRAME.setLayout(self.FRAME_LAYOUT)
             self.TIME_LABEL = widgets.QLabel(text = str(hour))
             self.IMAGE_LABEL = widgets.QLabel()
-            weather_pixmap = QPixmap(f"media/hour_forecast_icons/{weather_list[hour]}.png")
+
+            weather_pixmap = QPixmap(f"media/weather_icons/{weather_list[hour]}.png")
+            weather_pixmap = weather_pixmap.scaled(70, 70, core.Qt.AspectRatioMode.IgnoreAspectRatio, core.Qt.TransformationMode.SmoothTransformation)
+
             self.IMAGE_LABEL.setPixmap(weather_pixmap)
             self.TEMP_LABEL = widgets.QLabel(self.SCROLL_FRAME, text = str(round(temp_list[hour])))
+
             self.FRAME_LAYOUT.addWidget(self.TIME_LABEL)
-            self.FRAME_LAYOUT.addWidget(self.IMAGE_LABEL)
+            self.FRAME_LAYOUT.addWidget(self.IMAGE_LABEL, core.Qt.AlignmentFlag.AlignLeft)
             self.FRAME_LAYOUT.addWidget(self.TEMP_LABEL)
             self.SCROLL_LAYOUT.addWidget(self.FRAME)
-    
+
