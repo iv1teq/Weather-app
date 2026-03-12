@@ -48,17 +48,18 @@ class Hour_forecast(widgets.QFrame):
             self.FRAME_LAYOUT = widgets.QVBoxLayout()
             self.FRAME = widgets.QFrame(self.SCROLL_FRAME)
             self.FRAME.setLayout(self.FRAME_LAYOUT)
-            self.TIME_LABEL = widgets.QLabel(text = str(hour))
+            self.TIME_LABEL = widgets.QLabel(text = str(hour + 1))
+
             self.IMAGE_LABEL = widgets.QLabel()
 
             weather_pixmap = QPixmap(f"media/weather_icons/{weather_list[hour]}.png")
-            weather_pixmap = weather_pixmap.scaled(70, 70, core.Qt.AspectRatioMode.IgnoreAspectRatio, core.Qt.TransformationMode.SmoothTransformation)
+            weather_pixmap = weather_pixmap.scaled(50, 50, core.Qt.AspectRatioMode.IgnoreAspectRatio, core.Qt.TransformationMode.SmoothTransformation)
 
             self.IMAGE_LABEL.setPixmap(weather_pixmap)
             self.TEMP_LABEL = widgets.QLabel(self.SCROLL_FRAME, text = str(round(temp_list[hour])))
 
-            self.FRAME_LAYOUT.addWidget(self.TIME_LABEL)
+            self.FRAME_LAYOUT.addWidget(self.TIME_LABEL, alignment = core.Qt.AlignmentFlag.AlignCenter)
             self.FRAME_LAYOUT.addWidget(self.IMAGE_LABEL, core.Qt.AlignmentFlag.AlignLeft)
-            self.FRAME_LAYOUT.addWidget(self.TEMP_LABEL)
+            self.FRAME_LAYOUT.addWidget(self.TEMP_LABEL, alignment = core.Qt.AlignmentFlag.AlignCenter)
             self.SCROLL_LAYOUT.addWidget(self.FRAME)
 

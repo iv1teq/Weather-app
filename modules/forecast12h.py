@@ -57,12 +57,7 @@ class Forecast12(widgets.QFrame) :
             self.tem20 = widgets.QLabel(text = "20°")
             self.tem15 = widgets.QLabel(text = "15°")
             self.tem10 = widgets.QLabel(text = "10°")
-            
-            
-            
-
             self.temp5 = widgets.QLabel(text = '5°')
-        
             self.temp0 = widgets.QLabel(text = '0°')
             self.temp_5 = widgets.QLabel(text = '-5°')
             self.temp_10 = widgets.QLabel(text = '-10°')
@@ -76,6 +71,7 @@ class Forecast12(widgets.QFrame) :
             self.TEMP_LAYOUT.addWidget(self.temp0)
             self.TEMP_LAYOUT.addWidget(self.temp_5)
             self.TEMP_LAYOUT.addWidget(self.temp_10)
+            
             for i in range(4):
                     for _ in range(3):
                         icon = data["list"][i]["weather"][0]["icon"]
@@ -84,12 +80,12 @@ class Forecast12(widgets.QFrame) :
 
                     
 
-                        pixmap = pixmap.scaled(
-            70,
-            70,
-            core.Qt.AspectRatioMode.IgnoreAspectRatio,
-            core.Qt.TransformationMode.SmoothTransformation
-        )
+        #                 pixmap = pixmap.scaled(
+        #     70,
+        #     70,
+        #     core.Qt.AspectRatioMode.IgnoreAspectRatio,
+        #     core.Qt.TransformationMode.SmoothTransformation
+        # )
                         icon_label.setPixmap(pixmap)
                         icon_label.setStyleSheet("background-color: None")
 

@@ -25,7 +25,22 @@ class MainWindow(widgets.QMainWindow):
                 
 
                 self.setWindowFlags(core.Qt.WindowType.FramelessWindowHint)
-                
+                self.setStyleSheet("""
+QFrame {
+    background: qlineargradient(
+        x1:0, y1:1,        
+        x2:1, y2:0,  
+        stop:0 #5DADE2,      
+        stop:1 #808080                                                      
+
+    );
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px; 
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+""")
+        
                 self.WINDOW_WIDTH = window_width
                 self.WINDOW_HEIGHT = window_height
                 #search obj
@@ -69,8 +84,13 @@ class MainWindow(widgets.QMainWindow):
                 self.setCentralWidget(self.CENTRAL_WIDGET)
                 self.CENTRAL_WIDGET.setStyleSheet("""
         QWidget {
-        background-color: white;   
-        border-radius: 10px;       
+        background: qlineargradient(
+        x1:0, y1:1,        
+        x2:1, y2:0,  
+        stop:0 #5DADE2,      
+        stop:1 #808080 
+        ) ; 
+        border-radius: 10px;    
         }
         """)
 
@@ -151,6 +171,7 @@ class MainWindow(widgets.QMainWindow):
 
                 
         def card_clicked(self, card):
+
                 self.data = card.data
                 self.CONTENT_FRAME_LAYOUT.removeWidget(self.RIGHTAREA)
                 self.RIGHTAREA.deleteLater()

@@ -8,6 +8,7 @@ from .search import Search
 from PyQt6.QtCore import Qt
 from .hour_forecast import Hour_forecast
 from .forecast12h import Forecast12
+import PyQt6.QtGui as gui
 
 class RightArea(widgets.QFrame):
         def __init__(self, parent: None, search, card, main_window):
@@ -16,6 +17,7 @@ class RightArea(widgets.QFrame):
                 self.data = None
                 self.search = search
                 self.card = card
+                
                 
                 self.LAYOUT = widgets.QGridLayout()
                 self.LAYOUT.setRowStretch(2, 1)
@@ -28,7 +30,7 @@ class RightArea(widgets.QFrame):
                 self.LAYOUT.setContentsMargins(10,10,10,10)
                 self.LAYOUT.setSpacing(10)
 
-                self.HEADER_LAYOUT = widgets.QVBoxLayout()
+                self.HEADER_LAYOUT = widgets.QHBoxLayout()
                 self.RIGHT_LAYOUY = widgets.QVBoxLayout()
                 self.RIGHT_LAYOUY.setSpacing(10)
                 self.LEFT_LAYOUT = widgets.QVBoxLayout()
@@ -41,18 +43,27 @@ class RightArea(widgets.QFrame):
                 self.DAY_LAYOUT = widgets.QHBoxLayout()
                 self.CLOCK_LAYOUT = widgets.QGridLayout()
                 
-                # self.MINMAX_LAYOUT.setSpacing(0)
+                #search
+                self.SEARCH_LAYOUT = widgets.QHBoxLayout()
                 
                 
-                
-                
+
+
+
+
+
+
+
+
+                self.MINMAX_LAYOUT.setSpacing(0)
                 self.setLayout(self.LAYOUT)        
-                self.LAYOUT.addLayout(self.HEADER_LAYOUT, 0, 0, alignment = core.Qt.AlignmentFlag.AlignTop)
-                self.HEADER_LAYOUT.addWidget(self.search)
+                self.LAYOUT.addLayout(self.HEADER_LAYOUT, 0, 0, 1, 0, alignment = core.Qt.AlignmentFlag.AlignTop)
+                
 
 
                 card.clicked.connect(self.update_text)
 
+                #top left frame
                 self.left_frame = widgets.QFrame(self)
                 self.LAYOUT.addWidget(self.left_frame, 1, 0)
                 self.left_frame.setMinimumHeight(int(main_window.width() / 5))
@@ -65,29 +76,30 @@ class RightArea(widgets.QFrame):
                 self.left_frame.setLayout(self.LEFT_LAYOUT)
                 
 
-                
+                #top right frame
                 self.right_frame = widgets.QFrame(self)
                 self.LAYOUT.addWidget(self.right_frame, 1, 1)
                 self.right_frame.setMinimumHeight(self.left_frame.height())
                 self.right_frame.setMinimumWidth(self.left_frame.width())  
                 self.right_frame.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding )
-                # self.right_frame.setFixedSize(500, 500)
                 
                 self.right_frame.setStyleSheet('background-color: rgba(0, 0, 0, 50) ; border-radius: 10px ;')
 
                 self.LAYOUT.addLayout(self.HEADER_LAYOUT, 0 ,0 )
-
+                self.right_frame.setLayout(self.RIGHT_LAYOUY)
                 self.LEFT_LAYOUT.addLayout(self.TOP_LAYOUT)
 
+
+                #container for geo icon and text
                 container2 = widgets.QFrame()
-                container2.setFixedSize(self.left_frame.width(), 50 )
+                container2.setFixedSize(1000, 50 )
                 container2.setStyleSheet('background-color: None;' \
                 'border-radius: 0;  ' \
                 'padding-bottom: 5px; ' \
                 'border-bottom: 2px solid rgba(255, 255, 255, 50);   ' \
                 'border-top: none;border-left: none;border-right: none;')
 
-
+                #geo icon
                 self.geo_icon = widgets.QLabel(container2)
                 self.geo_icon.setGeometry(0, 2, container2.width(), container2.height())
                 self.geo_icon.setStyleSheet('background-color: None ; ' )
@@ -95,7 +107,7 @@ class RightArea(widgets.QFrame):
                 self.geo_icon.setPixmap(geo_pix)
                 
                 
-                
+                #label left frame
                 self.top_label = widgets.QLabel(container2, text = 'Поточна позицiя')
                 self.top_label.setGeometry(20,0, container2.width(), container2.height())
                 self.top_label.setStyleSheet('border-radius: 0; font-size: 20px; font-weight: bold; background-color: None;' \
@@ -104,36 +116,34 @@ class RightArea(widgets.QFrame):
                 'border-top: none;border-left: none;border-right: none; ')
                 self.LEFT_LAYOUT.addWidget(container2, alignment = core.Qt.AlignmentFlag.AlignTop)
                 
-
-
-
-
+                #city left frame
                 self.city_label = widgets.QLabel(text = self.search.city) 
                 self.city_label.setStyleSheet("font-size: 70px;font-weight: bold;  background-color: None")
                 self.LEFT_LAYOUT.addWidget(self.city_label, alignment=core.Qt.AlignmentFlag.AlignHCenter)
                 
                 self.LEFT_LAYOUT.addLayout(self.ICON_TEMP_LAYOUT)
+
+                #container for weather icon and temp label
                 container4 = widgets.QFrame()
                 container4.setFixedSize(300,150)
                 container4.setStyleSheet('background-color: None')
-
+                #weather icon
                 self.WEATHER_ICON = widgets.QLabel(container4)
                 self.WEATHER_ICON.setFixedSize(100,100)
-                self.WEATHER_ICON.setGeometry(0, 20, container4.width(), container4.height())
+                self.WEATHER_ICON.move(0, 20)
                 self.WEATHER_PIX = QPixmap('')
                 self.WEATHER_ICON.setPixmap(self.WEATHER_PIX)
                 self.WEATHER_ICON.setStyleSheet('background-color: None')
 
-
+                #temp label
                 self.temp_label = widgets.QLabel(container4) 
                 self.temp_label.setStyleSheet("font-size: 100px; font-weight: bold; background-color: rgba(0, 0, 0, 0)")
                 self.temp_label.setGeometry(130, 0, container4.width(), container4.height())
                 self.ICON_TEMP_LAYOUT.addWidget(container4)
-
+                #icl left frame
                 self.weather_label = widgets.QLabel() 
                 self.weather_label.setStyleSheet("font-size: 40px; font-weight: bold; background-color: None")
                 self.LEFT_LAYOUT.addWidget(self.weather_label, alignment=core.Qt.AlignmentFlag.AlignHCenter)
-
 
                 self.min_max_label = widgets.QLabel() 
                 self.min_max_label.setStyleSheet("font-size: 20px; background-color: rgba(0, 0, 0, 0)")
@@ -142,9 +152,9 @@ class RightArea(widgets.QFrame):
                 self.LEFT_LAYOUT.addLayout(self.MINMAX_LAYOUT)
                 
                 
-                self.right_frame.setLayout(self.RIGHT_LAYOUY)
+                
                 container3 = widgets.QFrame()
-                container3.setFixedSize(self.left_frame.width(), 50 )
+                container3.setFixedSize(1000, 50 )
                 container3.setStyleSheet('background-color: None;' \
                 'border-radius: 0;  ' \
                 'padding-bottom: 5px; ' \
@@ -206,8 +216,43 @@ class RightArea(widgets.QFrame):
                 self.DATE_LABEL.setStyleSheet("font-size: 30px; font-weight: bold;  background-color: rgba(0, 0, 0, 0)")
                 self.WEEK_DAY.setStyleSheet("font-size: 30px; font-weight: bold;  background-color: rgba(0, 0, 0, 0)")
                 
+                #settings button
+                self.settings_button = widgets.QPushButton()
+                self.settings_button.setFixedSize(50, 50)
+                self.settings_button.setStyleSheet('background: rgba(0,0,0,50)')
+                
+                self.icon_settings = gui.QIcon('media/settings.png')
+                self.settings_button.setIcon(self.icon_settings)
 
+                self.HEADER_LAYOUT.addWidget(self.settings_button)
+                #settings label
 
+                self.settings_label = widgets.QLabel(text = 'Settings')
+                self.settings_label.setStyleSheet('font-size: 40px; font-weight: bold; background-color: rgba(0, 0, 0, 0)')
+                self.HEADER_LAYOUT.addWidget(self.settings_label)
+                #search frame 
+                self.SEARCH_WIDGET = widgets.QFrame(self)
+                
+                self.SEARCH_WIDGET.setMinimumWidth(400)
+                self.SEARCH_WIDGET.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding)
+                self.SEARCH_WIDGET.setStyleSheet("background-color: rgba(0, 0, 0, 60); border-radius: 10px")
+                self.SEARCH_IMAGE = widgets.QLabel(self.SEARCH_WIDGET)
+                pixmap_search = QPixmap("media/search_image.png")
+                self.SEARCH_IMAGE.setPixmap(pixmap_search)
+                self.CROSS = widgets.QLabel(self.SEARCH_WIDGET)
+                pixmap_cross = QPixmap("media/clear.png")
+                self.CROSS.setPixmap(pixmap_cross)
+                self.SEARCH_IMAGE.setStyleSheet("background-color: None")
+                self.CROSS.setStyleSheet("background-color: None")
+
+                self.HEADER_LAYOUT.addWidget(self.SEARCH_WIDGET, alignment=core.Qt.AlignmentFlag.AlignRight)
+                self.SEARCH_WIDGET.setLayout(self.SEARCH_LAYOUT)
+                self.SEARCH_LAYOUT.addWidget(self.SEARCH_IMAGE)
+                self.SEARCH_LAYOUT.addWidget(self.search)
+                self.SEARCH_LAYOUT.addWidget(self.CROSS)
+                self.HEADER_LAYOUT.addWidget(self.SEARCH_WIDGET, alignment=core.Qt.AlignmentFlag.AlignRight)
+
+                #
                 self.bottom1 = widgets.QFrame()
                 self.botom1_layot = widgets.QVBoxLayout()
                 self.bottom1.setLayout(self.botom1_layot)
@@ -226,8 +271,6 @@ class RightArea(widgets.QFrame):
                 self.bottom2.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding )
                 self.FORECAST12 = Forecast12(parent = self.bottom2)
                 self.bottom2_layout.addWidget(self.FORECAST12)
-                
-                
 
                 
         def update_text(self):

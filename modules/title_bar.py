@@ -13,9 +13,9 @@ class Title_bar(widgets.QFrame):
         self.LAYOUT.setContentsMargins(10, 0, 10, 0)
         
         self.setLayout(self.LAYOUT)
-        
-        self.setFixedSize(core.QSize(width, 40))
-        self.setStyleSheet("background-color: white; ")
+        self.setFixedHeight(40)
+        self.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Fixed )
+        self.setStyleSheet("background-color: rgba(0, 0, 0, 0); ")
         
         self.BUTTONS_FRAME = widgets.QFrame(parent = self)
         self.BUTTONS_FRAME.setStyleSheet("background-color: transparent; ")
@@ -47,8 +47,8 @@ class Title_bar(widgets.QFrame):
         icon = gui.QIcon("media/title_bar/Maximize_Button.svg")
         self.MAX_BUTTON.setIcon(icon)
         self.MAX_BUTTON.setStyleSheet("border: none; ")
-        self.MAX_BUTTON.clicked.connect(self.WINDOW.showMaximized)
-        
+        self.MAX_BUTTON.clicked.connect( self.toggle_maximize)
+
         self.BUTTONS_FRAME_LAYOUT.addWidget(self.CLOSE_BUTTON)
         self.BUTTONS_FRAME_LAYOUT.addWidget(self.MIN_BUTTON)
         self.BUTTONS_FRAME_LAYOUT.addWidget(self.MAX_BUTTON)
@@ -77,3 +77,12 @@ class Title_bar(widgets.QFrame):
                     f.unlink()
                 except IsADirectoryError:
                     pass
+    def toggle_maximize(self):
+        if self.WINDOW.isMaximized():
+            self.WINDOW.showNormal()
+        else:
+            self.WINDOW.showMaximized()
+            
+            
+        
+        

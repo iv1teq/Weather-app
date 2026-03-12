@@ -90,6 +90,39 @@ class LeftArea(widgets.QFrame):
         #флаг для карточки где мы
         self.active_card = None 
         self.active_image = None 
+
+    CARD_STYLE_DEFAULT = """
+    QFrame {
+        background-color: transparent;
+        border-radius: 12px;
+    }
+    QFrame:hover {
+        background-color: rgba(0, 0, 0, 30);
+    }
+    QLabel {
+        background-color: transparent;
+    }
+    QLabel:hover {
+        background-color: None;
+    }
+    """
+
+    CARD_STYLE_ACTIVE = """
+    QFrame {
+        background-color: rgba(0, 0, 0, 30);
+        border-radius: 12px;
+    }
+    QFrame:hover {
+        background-color: rgba(0, 0, 0, 30);
+    }
+    QLabel {
+        background-color: transparent;
+    }
+    QLabel:hover {
+        background-color: None;
+    }
+    """
+
     # cards with forecast
     def add_card(self):
         if self.data is None:
@@ -100,7 +133,7 @@ class LeftArea(widgets.QFrame):
             self.search.clear()
             return
         else:
-            card = self.CardClass(self.scroll_frame, 
+            self.card = self.CardClass(self.scroll_frame, 
                         city_name = self.search.city, 
                         temp = round(self.data["list"][0]["main"]["temp"]), 
                         time = datetime.datetime.now(datetime.timezone(datetime.timedelta(seconds=self.data["city"]["timezone"]))).strftime("%H:%M"),
@@ -109,34 +142,18 @@ class LeftArea(widgets.QFrame):
                         max_temp=round(self.data["list"][0]["main"]["temp_max"]),
                         main_window = self.main_window, 
                         search = self.search)
-            card.data = self.data
-            self.scroll_layout.insertWidget(0, card)
-            card.setMinimumHeight(150)
-            card.setSizePolicy(
+            self.card.data = self.data
+            self.scroll_layout.insertWidget(0, self.card)
+            self.card.setMinimumHeight(150)
+            self.card.setSizePolicy(
         widgets.QSizePolicy.Policy.Expanding,
         widgets.QSizePolicy.Policy.Fixed
     )
-            
-            
-            
-            card.setStyleSheet("""
-    QFrame {
-        background-color: transparent;
-        border-radius: 12px;
-    }
+            self.card.setStyleSheet(self.CARD_STYLE_DEFAULT)
 
-    QFrame:hover {
-        background-color: rgba(0, 0,0, 30);
-    }
-    QLabel{
-        background-color: transparent;                         
-    }
-    QLabel:hover{
-        background-color: None;                         
-    }
-    """)
-            card.clicked.connect(self.add_image)
-            card.clicked.connect(self.main_window.card_clicked)
+            # передаём саму карточку в обработчик
+            self.card.clicked.connect(self.change_card_bg)
+            self.card.clicked.connect(self.main_window.card_clicked)
 
 
 
@@ -145,6 +162,17 @@ class LeftArea(widgets.QFrame):
     def icon_change(self):
         if self.BUTTON_PRESSED == False:
             self.button.setIcon(QIcon("media/light.png"))
+            self.main_window.CENTRAL_WIDGET.setStyleSheet("""
+        QWidget {
+        background: qlineargradient(
+        x1:0, y1:1,        
+        x2:1, y2:0,  
+        stop:0 #87CEFA,      
+        stop:1 #FFDF56
+        ) ; 
+        border-radius: 10px;    
+        }
+        """)
             self.main_window.CONTENT_FRAME.setStyleSheet("""
 QFrame {
     background: qlineargradient(
@@ -167,6 +195,17 @@ QFrame {
         elif self.BUTTON_PRESSED == True:
             self.button.setIcon(QIcon("media/dark.png"))
             self.BUTTON_PRESSED = False
+            self.main_window.CENTRAL_WIDGET.setStyleSheet("""
+        QWidget {
+        background: qlineargradient(
+        x1:0, y1:1,        
+        x2:1, y2:0,  
+        stop:0 #5DADE2,      
+        stop:1 #808080 
+        ) ; 
+        border-radius: 10px;    
+        }
+        """)
             self.main_window.CONTENT_FRAME.setStyleSheet("""
 QFrame {
     background: qlineargradient(
@@ -184,28 +223,15 @@ QFrame {
 """)
 
 
+    def change_card_bg(self, card):
+        # сбрасываем стиль у предыдущей активной карточки
+        if self.active_card is not None and self.active_card is not card:
+            self.active_card.setStyleSheet(self.CARD_STYLE_DEFAULT)
 
-    def add_image(self,card):
-        if self.active_image is None :
-            self.active_image = widgets.QLabel()
-            pix_map = QPixmap('media/Vector.png')
-            self.active_image.setPixmap(pix_map)
-
-        
-        
-        if self.active_card is not None:
-            card.icon_city_layout.removeWidget(self.active_image)
-
-        card.icon_city_layout.addWidget(self.active_image)
+        # применяем затемнение к новой
+        card.setStyleSheet(self.CARD_STYLE_ACTIVE)
         self.active_card = card
-        
-        card.icon_city_layout.removeWidget(card.CITY_NAME)
-        card.icon_city_layout.removeWidget(self.active_image)
-        card.icon_city_layout.insertWidget(0, self.active_image)
-        card.icon_city_layout.insertWidget(1, card.CITY_NAME)
-        card.icon_city_layout.addStretch(3)
         
     def update_data(self, data):
         self.data = data
         self.add_card()
-
