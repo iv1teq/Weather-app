@@ -11,7 +11,7 @@ class Search (widgets.QLineEdit):
         super().__init__(parent)
 
         self.setObjectName('search')
-        self.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
+        self.setStyleSheet('background-color: rgba(0, 0, 0, 0); ')
         self.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding )
         self.returnPressed.connect(self.on_enter) 
         self.city = ''

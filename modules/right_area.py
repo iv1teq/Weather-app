@@ -9,6 +9,7 @@ from PyQt6.QtCore import Qt
 from .hour_forecast import Hour_forecast
 from .forecast12h import Forecast12
 import PyQt6.QtGui as gui
+from .combo_box import Search_combobox
 
 class RightArea(widgets.QFrame):
         def __init__(self, parent: None, search, card, main_window):
@@ -18,7 +19,9 @@ class RightArea(widgets.QFrame):
                 self.search = search
                 self.card = card
                 
-                
+        
+                # self.combobox.citys_request()
+
                 self.LAYOUT = widgets.QGridLayout()
                 self.LAYOUT.setRowStretch(2, 1)
                 self.LAYOUT.setRowStretch(3, 1)
@@ -45,14 +48,6 @@ class RightArea(widgets.QFrame):
                 
                 #search
                 self.SEARCH_LAYOUT = widgets.QHBoxLayout()
-                
-                
-
-
-
-
-
-
 
 
                 self.MINMAX_LAYOUT.setSpacing(0)
@@ -61,7 +56,7 @@ class RightArea(widgets.QFrame):
                 
 
 
-                card.clicked.connect(self.update_text)
+                # card.clicked.connect(self.update_text)
 
                 #top left frame
                 self.left_frame = widgets.QFrame(self)
@@ -235,24 +230,29 @@ class RightArea(widgets.QFrame):
                 
                 self.SEARCH_WIDGET.setMinimumWidth(400)
                 self.SEARCH_WIDGET.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding)
-                self.SEARCH_WIDGET.setStyleSheet("background-color: rgba(0, 0, 0, 60); border-radius: 10px")
+                self.SEARCH_WIDGET.setStyleSheet("background-color: rgba(0, 0, 0, 60); border-radius: 10px; border: 2px solid white;")
                 self.SEARCH_IMAGE = widgets.QLabel(self.SEARCH_WIDGET)
                 pixmap_search = QPixmap("media/search_image.png")
                 self.SEARCH_IMAGE.setPixmap(pixmap_search)
                 self.CROSS = widgets.QLabel(self.SEARCH_WIDGET)
                 pixmap_cross = QPixmap("media/clear.png")
                 self.CROSS.setPixmap(pixmap_cross)
-                self.SEARCH_IMAGE.setStyleSheet("background-color: None")
-                self.CROSS.setStyleSheet("background-color: None")
-
+                self.SEARCH_IMAGE.setStyleSheet("background-color: None; border: 0px ;")
+                self.CROSS.setStyleSheet("background-color: None;  border: 0px ;")
+                self.search.setStyleSheet('border: 0px; background-color: rgba(0, 0, 0, 0)')
                 self.HEADER_LAYOUT.addWidget(self.SEARCH_WIDGET, alignment=core.Qt.AlignmentFlag.AlignRight)
                 self.SEARCH_WIDGET.setLayout(self.SEARCH_LAYOUT)
                 self.SEARCH_LAYOUT.addWidget(self.SEARCH_IMAGE)
                 self.SEARCH_LAYOUT.addWidget(self.search)
                 self.SEARCH_LAYOUT.addWidget(self.CROSS)
                 self.HEADER_LAYOUT.addWidget(self.SEARCH_WIDGET, alignment=core.Qt.AlignmentFlag.AlignRight)
+                #combobox
 
-                #
+                self.combobox = Search_combobox(self, search = self.search, width = self.SEARCH_WIDGET.width() )
+                # self.HEADER_LAYOUT.addWidget(self.combobox)
+                self.combobox.hide()
+                self.search.textChanged.connect(self.combobox_funk)
+
                 self.bottom1 = widgets.QFrame()
                 self.botom1_layot = widgets.QVBoxLayout()
                 self.bottom1.setLayout(self.botom1_layot)
@@ -272,9 +272,16 @@ class RightArea(widgets.QFrame):
                 self.FORECAST12 = Forecast12(parent = self.bottom2)
                 self.bottom2_layout.addWidget(self.FORECAST12)
 
-                
-        def update_text(self):
-                pass
+        def resizeEvent(self, event):
+                super().resizeEvent(event)
+                self.update_combobox_position()
+
+        def update_combobox_position(self):
+                # Получаем позицию SEARCH_WIDGET относительно RightArea
+                pos = self.SEARCH_WIDGET.mapTo(self, self.SEARCH_WIDGET.rect().bottomLeft())
+                self.combobox.move(pos.x(), pos.y() + 5)  # +5 небольшой отступ
+
+
         def update_data(self, data):
                 self.data = data
                 if not data or "list" not in data:
@@ -304,4 +311,12 @@ class RightArea(widgets.QFrame):
                 
                 self.HOUR_FORECAST.update_data(data = data )
                 self.FORECAST12.update_data(data = data)
-        
+        def combobox_funk(self):
+                if self.search.text() == "":
+                        self.combobox.hide()
+                else:
+                        self.update_combobox_position()
+                        self.combobox.filter_cities(self.search.text())
+                        self.combobox.raise_()
+                        self.combobox.show()
+                        
