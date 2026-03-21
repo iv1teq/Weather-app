@@ -13,6 +13,7 @@ from .search import Search
 from .card import Card
 import json
 from utils import api_request 
+from .settings import Settings
 
 sys.stdout.reconfigure(encoding="utf-8")
 sys.stderr.reconfigure(encoding="utf-8")
@@ -157,6 +158,11 @@ QFrame {
         border-top-right-radius: 0px;
         }
         """)
+                #test
+                # self.SETTINGS = Settings(self)
+                
+
+
 
         # Добавляем CONTENT_FRAME в центральный виджет
 
@@ -164,7 +170,7 @@ QFrame {
                 
         def entered(self, city , left_area, card):
 
-                self.data = api_request(city)
+                self.data = api_request(city, search = self.SEARCH)
 
                 left_area.update_data(self.data)
                 card.update_data(self.data, main_window=self)

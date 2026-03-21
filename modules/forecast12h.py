@@ -1,113 +1,104 @@
-
 import PyQt6.QtWidgets as widgets
 import PyQt6.QtCore as core
 import PyQt6.QtGui as gui
 
 
+class Forecast12(widgets.QFrame):
 
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
-class Forecast12(widgets.QFrame) : 
-        
-        def __init__(self, parent = None  ):
-            super().__init__(parent)
+        self.setSizePolicy(widgets.QSizePolicy.Policy.Expanding, widgets.QSizePolicy.Policy.Expanding)
+        self.setStyleSheet('background-color: transparent')
 
-            self.setSizePolicy(widgets.QSizePolicy.Policy.Expanding,widgets.QSizePolicy.Policy.Expanding)
+        self.MAIN_LAYOUT = widgets.QVBoxLayout(self)
+        self.MAIN_LAYOUT.setSpacing(15)
+        self.MAIN_LAYOUT.setContentsMargins(5, 5, 5, 5)
 
-            self.LAYOUT = widgets.QGridLayout()
-            self.setStyleSheet('background-color: None')
-            self.ICONS_LAYOUT = widgets.QHBoxLayout()
-            self.ICONS_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignLeft)
-            # self.ICONS_LAYOUT.setSpacing(1)
-            self.TEMP_LAYOUT = widgets.QVBoxLayout()
-            self.GRAPH_LAYOUT = widgets.QHBoxLayout()
-            self.GRAPH_LAYOUT.setSpacing(10)
-            self.LABEL_LAYOUT = widgets.QHBoxLayout()
-            
-            self.setLayout(self.LAYOUT)
-            
-            self.LABEL_TEXT = widgets.QLabel( text="Прогноз на 12 годин")
-            self.LABEL_TEXT.setStyleSheet("background-color: None; font-size: 20px;")
-            self.TEMP_LAYOUT.setContentsMargins(0, 0, 0, 0)
-            self.TEMP_LAYOUT.setSpacing(0)
-            self.TEMP_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignRight)
-            # self.TEMP_LABEL = widgets.QLabel(text = "25°\n20°\n15°\n10°\n5°\n0°\n-5°\n-10°\n")
-            
-            
-            
-            
-            
-            
-            
+        # заголовок
+        self.LABEL_TEXT = widgets.QLabel(text="Forecast for next 12 hours")
+        self.LABEL_TEXT.setStyleSheet("font-size: 40px; font-weight: bold; background-color: transparent;")
+        self.MAIN_LAYOUT.addWidget(self.LABEL_TEXT)
 
-            self.LAYOUT.addLayout(self.LABEL_LAYOUT, 0, 0)
-            self.LAYOUT.addLayout(self.ICONS_LAYOUT, 1, 0 )
-            self.LAYOUT.addLayout(self.TEMP_LAYOUT, 2, 2)
-            self.LAYOUT.addLayout(self.GRAPH_LAYOUT, 2, 0)
+        # underline
+        underline = widgets.QFrame()
+        underline.setFixedHeight(2)
+        underline.setSizePolicy(widgets.QSizePolicy.Policy.Expanding, widgets.QSizePolicy.Policy.Fixed)
+        underline.setStyleSheet('background-color: rgba(255, 255, 255, 30);')
+        self.MAIN_LAYOUT.addWidget(underline)
 
+        # иконки погоды над графиком
+        self.ICONS_LAYOUT = widgets.QHBoxLayout()
+        self.ICONS_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignLeft)
+        self.ICONS_LAYOUT.setSpacing(5)
+        self.MAIN_LAYOUT.addLayout(self.ICONS_LAYOUT)
 
-            
-            self.LABEL_LAYOUT.addWidget(self.LABEL_TEXT, alignment=core.Qt.AlignmentFlag.AlignTop)
+        # нижняя часть: график + температура справа
+        self.BOTTOM_LAYOUT = widgets.QHBoxLayout()
+        self.BOTTOM_LAYOUT.setSpacing(5)
+        self.BOTTOM_LAYOUT.setContentsMargins(0, 0, 0, 0)
+        self.MAIN_LAYOUT.addLayout(self.BOTTOM_LAYOUT)
 
+        # график с сеткой
+        self.GRAPH_FRAME = widgets.QFrame()
+        self.GRAPH_FRAME.setStyleSheet("""
+            QFrame {
+                border-image: url(media/grid.png);
+                border-radius: 10px;
+            }
+        """)
+        self.GRAPH_FRAME.setSizePolicy(widgets.QSizePolicy.Policy.Expanding, widgets.QSizePolicy.Policy.Expanding)
 
+        self.GRAPH_LAYOUT = widgets.QHBoxLayout(self.GRAPH_FRAME)
+        self.GRAPH_LAYOUT.setSpacing(10)
+        self.GRAPH_LAYOUT.setContentsMargins(5, 5, 5, 5)
+        self.GRAPH_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignBottom | core.Qt.AlignmentFlag.AlignLeft)
+        self.BOTTOM_LAYOUT.addWidget(self.GRAPH_FRAME)
 
-        def update_data(self, data):
-            if not data or "list" not in data:
-                return
-            self.tem25 = widgets.QLabel(text = "25°")
-            self.tem20 = widgets.QLabel(text = "20°")
-            self.tem15 = widgets.QLabel(text = "15°")
-            self.tem10 = widgets.QLabel(text = "10°")
-            self.temp5 = widgets.QLabel(text = '5°')
-            self.temp0 = widgets.QLabel(text = '0°')
-            self.temp_5 = widgets.QLabel(text = '-5°')
-            self.temp_10 = widgets.QLabel(text = '-10°')
-            
+        # температурные метки справа
+        self.TEMP_FRAME = widgets.QFrame()
+        self.TEMP_FRAME.setStyleSheet("background-color: transparent;")
+        self.TEMP_FRAME.setSizePolicy(widgets.QSizePolicy.Policy.Fixed, widgets.QSizePolicy.Policy.Expanding)
+        self.TEMP_LAYOUT = widgets.QVBoxLayout(self.TEMP_FRAME)
+        self.TEMP_LAYOUT.setContentsMargins(5, 0, 0, 0)
+        self.TEMP_LAYOUT.setSpacing(0)
+        self.TEMP_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignRight)
+        self.BOTTOM_LAYOUT.addWidget(self.TEMP_FRAME)
 
-            self.TEMP_LAYOUT.addWidget(self.tem25)
-            self.TEMP_LAYOUT.addWidget(self.tem20)
-            self.TEMP_LAYOUT.addWidget(self.tem15)
-            self.TEMP_LAYOUT.addWidget(self.tem10)
-            self.TEMP_LAYOUT.addWidget(self.temp5)
-            self.TEMP_LAYOUT.addWidget(self.temp0)
-            self.TEMP_LAYOUT.addWidget(self.temp_5)
-            self.TEMP_LAYOUT.addWidget(self.temp_10)
-            
-            for i in range(4):
-                    for _ in range(3):
-                        icon = data["list"][i]["weather"][0]["icon"]
-                        pixmap = gui.QPixmap(f'media/weather_icons/{icon}.png')
-                        icon_label = widgets.QLabel()
+    def update_data(self, data):
+        if not data or "list" not in data:
+            return
 
-                    
+        # очистка
+        for layout in [self.TEMP_LAYOUT, self.ICONS_LAYOUT, self.GRAPH_LAYOUT]:
+            while layout.count():
+                item = layout.takeAt(0)
+                if item.widget():
+                    item.widget().deleteLater()
 
-        #                 pixmap = pixmap.scaled(
-        #     70,
-        #     70,
-        #     core.Qt.AspectRatioMode.IgnoreAspectRatio,
-        #     core.Qt.TransformationMode.SmoothTransformation
-        # )
-                        icon_label.setPixmap(pixmap)
-                        icon_label.setStyleSheet("background-color: None")
+        # температурные метки справа
+        for text in ["25°", "20°", "15°", "10°", "5°", "0°", "-5°", "-10°"]:
+            label = widgets.QLabel(text=text)
+            label.setFixedWidth(35)
+            label.setStyleSheet("background-color: transparent; font-size: 12px;")
+            self.TEMP_LAYOUT.addWidget(label)
 
-                        self.ICONS_LAYOUT.addWidget(icon_label, core.Qt.AlignmentFlag.AlignLeft)
-                    
-            for hour_data in data["list"]:
-                temperature = int(hour_data["main"]["temp"])
-                
-                
-                
-                if temperature == 0 :
-                    height = 60
-                    self.COLUMN = widgets.QFrame(self)
-                    self.COLUMN.setFixedSize(core.QSize(16, height))
-                    self.COLUMN.setStyleSheet("background-color: pink ; ")
-                    self.GRAPH_LAYOUT.addWidget(self.COLUMN, alignment = core.Qt.AlignmentFlag.AlignBottom)
-                else:
-                    height = int(temperature + 60)
-                    self.COLUMN = widgets.QFrame(self)
-                    self.COLUMN.setFixedSize(core.QSize(12, height))
-                    self.COLUMN.setStyleSheet("background-color:qlineargradient(x1:0, y1:1,x2:1, y2:0,stop:0 #87CEFA,stop:1 #FFDF56) ; ")
-                    self.GRAPH_LAYOUT.addWidget(self.COLUMN, alignment = core.Qt.AlignmentFlag.AlignBottom)
+        # иконки погоды
+        for i in range(min(len(data["list"]), 38)):
+            icon = data["list"][i]["weather"][0]["icon"]
+            pixmap = gui.QPixmap(f'media/white_weather/{icon}.png')
+            icon_label = widgets.QLabel()
+            icon_label.setPixmap(pixmap)
+            icon_label.setStyleSheet("background-color: transparent;")
+            self.ICONS_LAYOUT.addWidget(icon_label)
 
-            
-                
+        # столбики графика
+        for hour_data in data["list"][:40]:
+            temperature = int(hour_data["main"]["temp"])
+            height = 60 if temperature == 0 else int(temperature + 60)
+
+            column = widgets.QFrame()
+            column.setSizePolicy(widgets.QSizePolicy.Policy.Expanding, widgets.QSizePolicy.Policy.Fixed)
+            column.setFixedHeight(height)
+            column.setStyleSheet("background-color: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #87CEFA, stop:1 #FFDF56);")
+            self.GRAPH_LAYOUT.addWidget(column, alignment=core.Qt.AlignmentFlag.AlignBottom)
