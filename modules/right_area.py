@@ -13,13 +13,14 @@ from .combo_box import Search_listwidget
 from .settings import Settings
 
 class RightArea(widgets.QFrame):
-        def __init__(self, parent: None, search, card, main_window):
+        def __init__(self, parent: None, search, card, content_frame, main_window):
                 super().__init__(parent)
 
+                self.content_frame = content_frame
                 self.data = None
                 self.search = search
                 self.card = card
-                self.SETTINGS = Settings(main_window)
+                self.SETTINGS = Settings(parent = main_window, content_frame = self.content_frame)
                 self.SETTINGS.move(450, 100)
                 self.SETTINGS.setStyleSheet('border-radius: 10px; background: #333333;')
 
@@ -112,12 +113,12 @@ class RightArea(widgets.QFrame):
                 self.top_label.setStyleSheet('border-radius: 0; font-size: 20px; font-weight: bold; background-color: None;' \
                 'padding-bottom: 5px; ' \
                 'border-bottom: 0px;   ' \
-                'border-top: none;border-left: none;border-right: none; ')
+                'border-top: none;border-left: none;border-right: none; color: white;')
                 self.LEFT_LAYOUT.addWidget(container2, alignment = core.Qt.AlignmentFlag.AlignTop)
                 
                 #city left frame
                 self.city_label = widgets.QLabel(text = self.search.city) 
-                self.city_label.setStyleSheet("font-size: 70px;font-weight: bold;  background-color: None")
+                self.city_label.setStyleSheet("font-size: 70px;font-weight: bold;  background-color: None; color: white;")
                 self.LEFT_LAYOUT.addWidget(self.city_label, alignment=core.Qt.AlignmentFlag.AlignHCenter)
                 
                 self.LEFT_LAYOUT.addLayout(self.ICON_TEMP_LAYOUT)
@@ -240,9 +241,11 @@ class RightArea(widgets.QFrame):
                 self.SEARCH_IMAGE = widgets.QLabel(self.SEARCH_WIDGET)
                 pixmap_search = QPixmap("media/search_image.png")
                 self.SEARCH_IMAGE.setPixmap(pixmap_search)
-                self.CROSS = widgets.QLabel(self.SEARCH_WIDGET)
-                pixmap_cross = QPixmap("media/clear.png")
-                self.CROSS.setPixmap(pixmap_cross)
+                self.CROSS = widgets.QPushButton(self.SEARCH_WIDGET)
+                self.CROSS.clicked.connect(self.clear_text)
+                self.CROSS.setFixedSize(20,20)
+                cross_icon = gui.QIcon('media/clear.png')
+                self.CROSS.setIcon(cross_icon)
                 self.SEARCH_IMAGE.setStyleSheet("background-color: None; border: 0px ;")
                 self.CROSS.setStyleSheet("background-color: None;  border: 0px ;")
                 self.search.setStyleSheet('border: 0px; background-color: rgba(0, 0, 0, 0)')
@@ -371,4 +374,8 @@ class RightArea(widgets.QFrame):
 
         def create_settings(self):
                 self.SETTINGS.show()
-                
+                blur = widgets.QGraphicsBlurEffect()
+                blur.setBlurRadius(20)
+                self.content_frame.setGraphicsEffect(blur)
+        def clear_text(self):
+                self.search.clear()

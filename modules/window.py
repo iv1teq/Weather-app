@@ -113,7 +113,7 @@ QFrame {
                 self.CONTENT_FRAME_LAYOUT.setSpacing(0)
                 self.CONTENT_FRAME.setLayout(self.CONTENT_FRAME_LAYOUT)
                 #Right Area
-                self.RIGHTAREA = RightArea(self.CONTENT_FRAME, search = self.SEARCH, card = self.CARD, main_window=self)
+                self.RIGHTAREA = RightArea(self.CONTENT_FRAME, search = self.SEARCH, card = self.CARD, content_frame=self.CONTENT_FRAME, main_window = self)
                 self.RIGHTAREA.setSizePolicy(
         widgets.QSizePolicy.Policy.Expanding,
         widgets.QSizePolicy.Policy.Expanding
