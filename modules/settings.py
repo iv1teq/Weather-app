@@ -4,8 +4,7 @@ import PyQt6.QtGui as gui
 import PyQt6.QtWebEngineWidgets as web_engine
 import folium
 import io
-
-
+from config import MY_KEY
 
 class Settings(widgets.QFrame):
     def __init__(self, parent, content_frame):
@@ -125,7 +124,6 @@ class Settings(widgets.QFrame):
         self.RIGHT_LAYOUT.addWidget(right_label, 0,0, alignment = core.Qt.AlignmentFlag.AlignTop)
 
         #mini map
-        MY_KEY = "11dc5041-69ae-4e1e-88a4-cfd35a913235"
 
         map = folium.Map(
             location=(50, 50),
