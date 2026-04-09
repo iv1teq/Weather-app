@@ -13,14 +13,21 @@ from .combo_box import Search_listwidget
 from .settings import Settings
 
 class RightArea(widgets.QFrame):
-        def __init__(self, parent: None, search, card, content_frame, main_window):
+        def __init__(self, parent: None, search, card, content_frame, main_window, card_list, deleted_card_list):
                 super().__init__(parent)
 
                 self.content_frame = content_frame
                 self.data = None
                 self.search = search
                 self.card = card
-                self.SETTINGS = Settings(parent = main_window, content_frame = self.content_frame)
+                self.card_list = card_list
+                self.deleted_card_list = deleted_card_list
+                self.SETTINGS = Settings(parent = main_window, 
+                                        content_frame = self.content_frame, 
+                                        search = self.search,
+                                        card_list= self.card_list,
+                                        deleted_card_list= self.deleted_card_list
+                                        )
                 self.SETTINGS.move(450, 100)
                 self.SETTINGS.setStyleSheet('border-radius: 10px; background: #333333;')
 
@@ -224,7 +231,7 @@ class RightArea(widgets.QFrame):
                 self.icon_settings = gui.QIcon('media/settings.png')
                 self.settings_button.setIcon(self.icon_settings)
 
-                self.settings_button.clicked.connect(self.create_settings)
+                self.settings_button.clicked.connect(self.create_blur)
 
                 self.HEADER_LAYOUT.addWidget(self.settings_button)
                 #settings label
@@ -258,6 +265,7 @@ class RightArea(widgets.QFrame):
                 #listwidget
 
                 self.listwidget = Search_listwidget(self, search = self.search, width = self.SEARCH_WIDGET.width() )
+                self.listwidget.cities_funk()
                 self.listwidget.setFixedHeight(200)
                 # self.HEADER_LAYOUT.addWidget(self.combobox)
                 self.listwidget.hide()
@@ -330,7 +338,7 @@ class RightArea(widgets.QFrame):
                 self.min = data["list"][0]["main"]["temp_min"]
                 self.max = data["list"][0]["main"]["temp_max"]
                 self.icon = data["list"][0]["weather"][0]["icon"]
-                
+                self.SETTINGS.update()
 
                 # просто меняем текст виджетов
                 self.city_label.setText(self.city_name)
@@ -348,6 +356,8 @@ class RightArea(widgets.QFrame):
                 
                 self.HOUR_FORECAST.update_data(data = data )
                 self.FORECAST12.update_data(data = data)
+
+
         def listwidget_funk(self):
                 if self.search.text() == "":
                         self.listwidget.hide()
@@ -372,8 +382,8 @@ class RightArea(widgets.QFrame):
                         self.right_arrow_pressed_flag = True
                         self.left_arrow_pressed_flag = False
 
-        def create_settings(self):
-                self.SETTINGS.show()
+        def create_blur(self):
+                self.SETTINGS.show_window()
                 blur = widgets.QGraphicsBlurEffect()
                 blur.setBlurRadius(20)
                 self.content_frame.setGraphicsEffect(blur)

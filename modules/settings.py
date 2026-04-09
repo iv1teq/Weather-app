@@ -5,10 +5,14 @@ import PyQt6.QtWebEngineWidgets as web_engine
 import folium
 import io
 from config import MY_KEY
+from .combo_box import Search_listwidget
 
 class Settings(widgets.QFrame):
-    def __init__(self, parent, content_frame):
-        super().__init__(parent )
+    def __init__(self, parent, content_frame, search, card_list, deleted_card_list):
+        super().__init__(parent)
+        self.card_list = card_list
+        self.deleted_card_list = deleted_card_list
+        self.search = search
         #window setup
         self.content_frame = content_frame
         self.setFixedSize(1000, 1000)
@@ -106,17 +110,22 @@ class Settings(widgets.QFrame):
 
 
         #header label
+
         label_settings = widgets.QLabel(text = 'Settings')
         label_settings.setStyleSheet('font-size: 45px; font-weight: bold;')
         self.HEADER_LAYOUT.addWidget(label_settings)
+
         #close button
+
         close_button = widgets.QPushButton()
         close_button.setFixedSize(100,100)
         close_icon = gui.QIcon('media/x.png')
         close_button.setIcon(close_icon)
         self.HEADER_LAYOUT.addWidget(close_button)
         close_button.clicked.connect(self.hide_window)
+
         #right area title
+
         right_label = widgets.QLabel(text = 'Find a city')
         self.SEARCH_LAYOUT = widgets.QVBoxLayout()
         self.RIGHT_LAYOUT.addLayout(self.SEARCH_LAYOUT, 1, 0, alignment=core.Qt.AlignmentFlag.AlignTop)
@@ -147,7 +156,10 @@ class Settings(widgets.QFrame):
         self.city_label = widgets.QLabel(text = "City")
         self.coordinates_label = widgets.QLabel(text = "Coordinates")
         self.COUNTRY_SEARCH = widgets.QLineEdit()
+
         self.CITY_SEARCH = widgets.QLineEdit()
+        
+
         self.COORDINATES_SEARCH = widgets.QLineEdit()
         self.SAVE_BUTTON = widgets.QPushButton(text="Save")
         self.SAVE_BUTTON.setStyleSheet("background-color: #383838; color: white")
@@ -172,43 +184,104 @@ class Settings(widgets.QFrame):
         self.SEARCH_LAYOUT.addWidget(self.SAVE_BUTTON)
         
         #layout for added citys
+
         self.LABEL_ADDED_CITIES_LAYOUT = widgets.QVBoxLayout()
         #container for layout
+
         self.CITY_ADDED_FRAME = widgets.QFrame()
         self.CITY_ADDED_FRAME.setFixedWidth(600)
         self.CITY_ADDED_FRAME.setLayout(self.LABEL_ADDED_CITIES_LAYOUT)
-        
-        #layout for one city
-        self.CITY_LAYOUT = widgets.QHBoxLayout()
-        #city 
-        #city container
-        self.CITY_WIDGET = widgets.QFrame()
 
-        self.CITY_LABEL = widgets.QLabel(text = 'Dnepr') #here citys info from search
-        self.CITY_LABEL.setStyleSheet('font-size: 15px;')
-        self.CITY_WIDGET.setLayout(self.CITY_LAYOUT)
-        #del button
-        self.DELETE_BUTTON = widgets.QPushButton()
-        self.DELETE_ICON = gui.QIcon('media/delete_button.png')
-        self.DELETE_BUTTON.setIcon(self.DELETE_ICON)
-        #adding city to the main citys layout 
-        self.CITY_LAYOUT.addWidget(self.CITY_LABEL)
-        self.CITY_LAYOUT.addWidget(self.DELETE_BUTTON)# use this for added citys in main app and in settings
-        
-        # add city label to the container layout
-        self.LABEL_ADDED_CITIES_LAYOUT.addWidget(self.CITY_WIDGET)
-        # add container to the layout
         self.RIGHT_LAYOUT.addWidget(self.CITY_ADDED_FRAME, 2, 0, 1, 2)
         
+        #list widget + search
+
+        self.country_listwidget = Search_listwidget(self, search = self.COUNTRY_SEARCH, width = 200 )
+        self.country_listwidget.countries_funk()
+        self.country_listwidget.setFixedHeight(200)
+        self.country_listwidget.hide()
+        self.COUNTRY_SEARCH.textChanged.connect(self.country_listwidget_funk)
+        
+        self.city_listwidget = Search_listwidget(self, search = self.CITY_SEARCH, width = 200 )
+        self.city_listwidget.cities_funk()
+        self.city_listwidget.setFixedHeight(200)
+        self.city_listwidget.hide()
+        self.CITY_SEARCH.textChanged.connect(self.city_listwidget_funk)
+
+        self.country_listwidget.country_selected.connect(
+    self.city_listwidget.load_cities_by_country
+)
+        self.create_cards()
         
         
-        
-        
-        
+    def update_country_listwidget_position(self):
+        pos = self.COUNTRY_SEARCH.mapTo(self, self.COUNTRY_SEARCH.rect().bottomLeft())
+        self.country_listwidget.move(pos.x(), pos.y() + 5)
+
+    def update_city_listwidget_position(self):
+        pos = self.CITY_SEARCH.mapTo(self, self.CITY_SEARCH.rect().bottomLeft())
+        self.city_listwidget.move(pos.x(), pos.y() + 5)
+
 
     def hide_window(self):
         self.hide()
         self.content_frame.setGraphicsEffect(None)
     
-    
-    
+    def show_window(self):  # добавь этот метод
+        self.create_cards()  # обновляем список при открытии
+        self.show()
+
+
+    def country_listwidget_funk(self):
+        if self.COUNTRY_SEARCH.text() == "":
+                self.country_listwidget.hide()
+        else:
+                self.update_country_listwidget_position()
+                self.country_listwidget.filter_countries(self.COUNTRY_SEARCH.text())
+                self.country_listwidget.raise_()
+                self.country_listwidget.show()
+                
+    def city_listwidget_funk(self):
+        if self.CITY_SEARCH.text() == "":
+                self.city_listwidget.hide()
+        else:
+                self.update_city_listwidget_position()
+                self.city_listwidget.filter_cities(self.CITY_SEARCH.text())
+                self.city_listwidget.raise_()
+                self.city_listwidget.show()
+                
+
+    def create_cards(self):
+        # очищаем предыдущие карточки
+        for i in reversed(range(self.LABEL_ADDED_CITIES_LAYOUT.count())):
+            item = self.LABEL_ADDED_CITIES_LAYOUT.itemAt(i)
+            if item and item.widget():
+                item.widget().deleteLater()
+
+        for city in self.card_list:
+            city_widget = widgets.QFrame()
+            city_layout = widgets.QHBoxLayout()
+            city_widget.setLayout(city_layout)
+
+            city_label = widgets.QLabel(text=city)
+            city_label.setStyleSheet('font-size: 15px; color: white;')
+
+            delete_button = widgets.QPushButton()
+            delete_icon = gui.QIcon('media/delete_button.png')
+            delete_button.setIcon(delete_icon)
+            delete_button.clicked.connect(lambda checked, c=city: self.delete_cards(c))
+
+            city_layout.addWidget(city_label)
+            city_layout.addWidget(delete_button)
+
+            self.LABEL_ADDED_CITIES_LAYOUT.addWidget(city_widget)  # ← добавляем в layout!
+    def delete_cards(self, city_name):
+        self.card_list.remove(city_name)
+        self.deleted_card_list.append(city_name)
+        self.create_cards()  # просто перерисовываем список
+        
+    def update(self):
+        # self.delete_cards()
+        self.create_cards()
+        print("+")
+

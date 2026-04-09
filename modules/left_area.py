@@ -17,14 +17,15 @@ from PyQt6.QtCore import Qt
 
 
 class LeftArea(widgets.QFrame):
-    def __init__(self, parent: None, search, card , main_window):
+    def __init__(self, parent: None, search, card , main_window, card_list, deleted_card_list):
         super().__init__(parent)
         self.main_window = main_window
         self.search = search
         self.CardClass = card
         self.main_window = main_window
         self.data = None
-        
+        self.card_list = card_list
+        self.deleted_card_list = deleted_card_list
 
 
         self.setSizePolicy(widgets.QSizePolicy.Policy.Preferred, widgets.QSizePolicy.Policy.Expanding)
@@ -133,6 +134,7 @@ class LeftArea(widgets.QFrame):
             self.search.clear()
             return
         else:
+            self.card_list.append(self.search.city)
             self.card = self.CardClass(self.scroll_frame, 
                         city_name = self.search.city, 
                         temp = round(self.data["list"][0]["main"]["temp"]), 

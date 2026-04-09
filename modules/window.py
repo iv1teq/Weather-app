@@ -62,8 +62,8 @@ QFrame {
                                 search=self.SEARCH,
                                 )
                 
-                
-                
+                self.card_list = []
+                self.deleted_card_list = []
                 self.SCREEN = app_obj.primaryScreen()
                 self.SCREEN_SIZE = self.SCREEN.size()
                 
@@ -113,7 +113,14 @@ QFrame {
                 self.CONTENT_FRAME_LAYOUT.setSpacing(0)
                 self.CONTENT_FRAME.setLayout(self.CONTENT_FRAME_LAYOUT)
                 #Right Area
-                self.RIGHTAREA = RightArea(self.CONTENT_FRAME, search = self.SEARCH, card = self.CARD, content_frame=self.CONTENT_FRAME, main_window = self)
+                self.RIGHTAREA = RightArea(self.CONTENT_FRAME, 
+                                        search = self.SEARCH, 
+                                        card = self.CARD, 
+                                        content_frame=self.CONTENT_FRAME, 
+                                        main_window = self,
+                                        card_list = self.card_list,
+                                        deleted_card_list = self.deleted_card_list
+                                        )
                 self.RIGHTAREA.setSizePolicy(
         widgets.QSizePolicy.Policy.Expanding,
         widgets.QSizePolicy.Policy.Expanding
@@ -124,7 +131,9 @@ QFrame {
                 self.LEFTAREA = LeftArea(self.CONTENT_FRAME, 
                                         search=self.SEARCH,
                                         card = Card, 
-                                        main_window = self
+                                        main_window = self, 
+                                        card_list = self.card_list,
+                                        deleted_card_list= self.deleted_card_list
                                         )
                 self.LEFTAREA.setMinimumWidth(self.WINDOW_WIDTH // 3)
                 self.LEFTAREA.setSizePolicy(
@@ -181,7 +190,15 @@ QFrame {
                 self.data = card.data
                 self.CONTENT_FRAME_LAYOUT.removeWidget(self.RIGHTAREA)
                 self.RIGHTAREA.deleteLater()
-                self.RIGHTAREA = RightArea(self.CONTENT_FRAME, search = self.SEARCH, card = card, main_window=self)
+                self.RIGHTAREA = RightArea(
+                        self.CONTENT_FRAME, 
+                        search = self.SEARCH, 
+                        card = card, 
+                        content_frame = self.CONTENT_FRAME,
+                        main_window=self, 
+                        card_list=self.card_list,
+                        deleted_card_list=self.deleted_card_list
+                        )
                 self.RIGHTAREA.setSizePolicy(
         widgets.QSizePolicy.Policy.Expanding,
         widgets.QSizePolicy.Policy.Expanding
