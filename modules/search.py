@@ -19,5 +19,5 @@ class Search (widgets.QLineEdit):
         self.setPlaceholderText("search")
     def on_enter(self):
         self.city = self.text()
-        self.clear()
-        self.city_entered.emit(self.city)  # уведомляем родителя
+        core.QTimer.singleShot(0, self.clearFocus)  # убираем курсор
+        self.city_entered.emit(self.city)

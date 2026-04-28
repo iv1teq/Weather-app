@@ -10,13 +10,13 @@ class Forecast12(widgets.QFrame):
 
         self.setSizePolicy(widgets.QSizePolicy.Policy.Expanding, widgets.QSizePolicy.Policy.Expanding)
         self.setStyleSheet('background-color: transparent')
-
+        self.setObjectName("forecast12h")
         self.MAIN_LAYOUT = widgets.QVBoxLayout(self)
         self.MAIN_LAYOUT.setSpacing(15)
         self.MAIN_LAYOUT.setContentsMargins(5, 5, 5, 5)
 
         # заголовок
-        self.LABEL_TEXT = widgets.QLabel(text="Forecast for next 12 hours")
+        self.LABEL_TEXT = widgets.QLabel()
         self.LABEL_TEXT.setStyleSheet("font-size: 40px; font-weight: bold; background-color: transparent;")
         self.MAIN_LAYOUT.addWidget(self.LABEL_TEXT)
 
@@ -65,6 +65,18 @@ class Forecast12(widgets.QFrame):
         self.TEMP_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignRight)
         self.BOTTOM_LAYOUT.addWidget(self.TEMP_FRAME)
 
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.LABEL_TEXT.setText(
+            self.tr("Forecast for next 12 hours")
+        )
+    def changeEvent(self, event):
+        if event.type() == core.QEvent.Type.LanguageChange:
+            self.retranslateUi()
+
+        super().changeEvent(event)
+    
     def update_data(self, data):
         if not data or "list" not in data:
             return

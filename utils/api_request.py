@@ -5,11 +5,11 @@ import json
 
 
 
-def api_request(city_name: str, search):
-    response = requests.get(f"https://api.openweathermap.org/data/2.5/forecast?q={city_name}&units=metric&appid={API_KEY}")
+def api_request(city_name: str):
+    response = requests.get(f"https://api.openweathermap.org/data/2.5/forecast?lang=ru&q={city_name}&units=metric&appid={API_KEY}")
     data_dict = response.json()
 
-    with open(f"static/json/{city_name}.json", mode ="w")as file:
+    with open(f"static/json/{city_name}.json", mode="w", encoding="utf-8") as file:
         json.dump(obj = data_dict, fp = file, indent = 4, ensure_ascii = False)
 
     

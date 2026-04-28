@@ -6,8 +6,10 @@ import json
 
 class Card (widgets.QFrame):
     clicked = pyqtSignal(object)
+    delete_requested = pyqtSignal(object)
     def __init__(self, parent, city_name, temp, time, weather, min_temp, max_temp,  main_window , search):
         super().__init__(parent)
+        self.setObjectName("card")
         # self.LAYOUT_CARD = widgets.QGridLayout()
         # self.LAYOUT_CARD.setSpacing(0)
         self.main_window = main_window
